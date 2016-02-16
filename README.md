@@ -10,7 +10,7 @@ To install HiveThrift you need to checkout the sources: `git clone git://github.
 * Execute the following commands:
 
 ```
-npm install &&
+npm install
 node index.js
 ```
 
