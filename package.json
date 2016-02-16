@@ -1,0 +1,19 @@
+{
+  "name": "hive-thrift",
+  "version": "1.0.0",
+  "description": "Node application using thrift API to query Hive",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "hive",
+    "thrift"
+  ],
+  "author": "yann blanc",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "thrift": "^0.9.3"
+  }
+}
