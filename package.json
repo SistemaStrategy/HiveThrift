@@ -4,6 +4,7 @@
   "description": "Node application using thrift API to query Hive",
   "main": "index.js",
   "scripts": {
+	"start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -14,6 +15,8 @@
   "author": "yann blanc",
   "license": "UNLICENSED",
   "dependencies": {
-    "thrift": "^0.9.3"
+    "thrift": "^0.9.3",
+	"express": "^4.13.4",
+    "mustache-express": "^1.2.2",
   }
 }
