@@ -33,7 +33,7 @@ var config = JSON.parse(yield new Promise(function (resolve, reject) {
 /************************************/
 /*Library definition, to externalize*/
 /************************************/
-
+/*Open Hive session*/
 function openSession(config, callback) {
 	openSessReq = new ttypes.TOpenSessionReq();
 	openSessReq.username = config.hiveUser;
@@ -51,6 +51,7 @@ function openSession(config, callback) {
 	});
 }
 
+/*Close Hive session*/
 function closeSession(session) {
 	client.CloseSession(session, function(err, result) {
 		if (err) {
@@ -59,6 +60,37 @@ function closeSession(session) {
 			console.log('Session closed');
 			connection.end();
 			console.log('Connection closed');
+		}
+	});
+}
+
+/*Execute HiveQL Statement*/
+function executeStatement (session, statement, callback) {
+	request = new ttypes.TExecuteStatementReq();
+	request.sessionHandle = session;
+	request.statement = statement;
+	request.runAsync = false;
+	client.ExecuteStatement(request, function (err, result){
+		if (err) {
+			console.log("ExecuteStatement erreur : " + err);
+		} else {
+			console.log("ExecuteStatement status : " + result.status.statusCode);
+			callback(result.operationHandle);
+		}
+	});
+}
+
+function fetchRows (operation, maxRows, callback) {
+	request = new ttypes.TFetchResultsReq();
+	request.operationHandle = operation;
+	request.orientation = ttypes.TFetchOrientation.FETCH_NEXT;
+	request.maxRows = maxRows;
+	client.FetchResults(request, function (err, result){
+		if (err) {
+			console.log("FetchResults erreur : " + err);
+		} else {
+			console.log("FetchResults status : " + result.status.statusCode);
+			callback(result);
 		}
 	});
 }
@@ -80,14 +112,18 @@ connection.on('connect', function(){
 	console.log("OpenSession call");
 	openSession(config, function (session) {
 		console.log('Inside callback ... ');
-		var getInfoReq = new ttypes.TGetInfoReq();
-		getInfoReq.sessionHandle = session;
-		getInfoReq.infoType = ttypes.TGetInfoType.CLI_DBMS_NAME;
-		client.GetInfo(getInfoReq, function(errInfo, resInfo) {
-			console.log(JSON.stringify(resInfo));
-			client.CloseSession(session);
-			console.log("Program done");
-			process.exit(0);
+		executeStatement(session, "use test", function (operation) {});
+		executeStatement(session, "select * from emp", function (operation) {
+			fetchRows(operation, 50, function (fetchResult) {
+				console.log(JSON.stringify(fetchResult));
+				endProgram(session);
+			});
 		});
 	});
 });
+
+function endProgram(session) {
+	client.CloseSession(session);
+	console.log("Program done");
+	process.exit(0);
+}
