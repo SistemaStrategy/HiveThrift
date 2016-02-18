@@ -1,0 +1,6 @@
+{
+	"hiveHost" : "vm-cluster2-node1",
+	"hivePort" : 10000,
+	"hiveUser" : "root",
+	"hivePassword" : "root"
+}

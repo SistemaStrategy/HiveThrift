@@ -1,0 +1,9 @@
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"connect ...","time":"2016-02-18T14:31:55.574Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"Connection initialised for vm-cluster2-node1:10000","time":"2016-02-18T14:31:55.583Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"Session opened for user root with protocol value = 6","time":"2016-02-18T14:31:55.648Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"executeStatement : select * from test.emp","time":"2016-02-18T14:31:55.653Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"executeStatement done","time":"2016-02-18T14:31:55.834Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"fetchRows on {\"operationId\":{\"guid\":{\"type\":\"Buffer\",\"data\":[119,137,213,232,251,128,78,196,155,71,80,97,250,121,151,0]},\"secret\":{\"type\":\"Buffer\",\"data\":[175,85,99,68,190,155,76,25,190,219,171,241,108,60,180,191]}},\"operationType\":0,\"hasResultSet\":true,\"modifiedRowCount\":null}","time":"2016-02-18T14:31:55.834Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"fetchRows done","time":"2016-02-18T14:31:55.873Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"disconnect = [object Object]","time":"2016-02-18T14:31:55.873Z","v":0}
+{"name":"HiveThriftLibrary","hostname":"vm-cluster2-node1","pid":22038,"entity":"Client object","level":10,"msg":"Session closed","time":"2016-02-18T14:31:55.905Z","v":0}
