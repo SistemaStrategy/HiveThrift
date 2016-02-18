@@ -1,4 +1,4 @@
-var client = require('./lib/Client');
+var client = require('./lib/HiveThriftClient');
 var bunyan = require('bunyan');
 
 /*********************************************************************************/
