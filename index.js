@@ -35,6 +35,9 @@ function disconnect(session) {
 
 logger.info('Connecting ...');
 
+var date = new Date();
+var time1, time2;
+
 client.connect(function (err, session) {
 	
 	if(err) {
@@ -43,19 +46,11 @@ client.connect(function (err, session) {
 	} else {
 		logger.info('Connection success');
 		logger.info(JSON.stringify(session));
-		
-		client.executeStatement(session, "select * from test.emp", function (err, response) {
-			
-			if(err) {
-				logger.error('ExecuteStatement error = ' + err);
-				disconnect(session);
-			} else {
-				client.fetchRows(response.operationHandle, 50, function(err, response) {
-					logger.info(JSON.stringify(response));
-					disconnect(session);
-				})
-			}
-			
+		time1 = date.getTime();
+	
+		client.executeSelect(session, "select * from test.emp where emp.id > 1000", 50, function (err, res) {
+			logger.info("select * from test.emp where emp.id > 1000 => " + JSON.stringify(res));
+			disconnect(session);
 		});
 	}
 	
