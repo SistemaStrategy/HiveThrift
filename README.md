@@ -15,4 +15,4 @@ node index.js
 ```
 
 ## Hive configuration
-In order to query the desired Hive instance, modify the Hive configuration stored in config.json file. The host must be pointing to the **HiveServer2** instance.
+In order to query the desired Hive instance, modify the Hive configuration stored in **config.json** file. The host must be pointing to the **HiveServer2** instance.
