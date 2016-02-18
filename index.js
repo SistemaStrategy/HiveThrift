@@ -1,129 +1,62 @@
-/**************/
-/*Require part*/
-/**************/
+var client = require('./lib/Client');
+var bunyan = require('bunyan');
 
-var thrift = require('thrift'),
-    hive = require('./lib/gen-nodejs/TCLIService'),
-    ttypes = require('./lib/gen-nodejs/TCLIService_types');
+/*********************************************************************************/
+/*                                    LOGGER                                     */
+/*********************************************************************************/
 	
-/********************/
-/*Hive configuration, create config.json file*/
-/********************/
+var logger = bunyan.createLogger({
+		name: 'HiveThriftWeb',
+		stream: process.stderr,
+        level: "info"
+	});
 
-var config = {
-	hiveHost : "vm-cluster2-node1",
-	hivePort : 10000,
-	hiveUser: 'root',
-	hivePassword : 'root',
-	auth : "nosasl",
-	timeout : "10000",
+/*********************************************************************************/
+/*                                    MAIN                                       */
+/*********************************************************************************/
+function endProgram(returnVal) {
+	logger.info('End of the program, returning ' + returnVal);
+	process.exit(returnVal);
 }
 
-/*
-var config = JSON.parse(yield new Promise(function (resolve, reject) {
-    fs.readFile('./config.json', function (err, buf) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(buf);
-      }
-	});
-}));*/
+function disconnect(session) {
 	
-/************************************/
-/*Library definition, to externalize*/
-/************************************/
-/*Open Hive session*/
-function openSession(config, callback) {
-	openSessReq = new ttypes.TOpenSessionReq();
-	openSessReq.username = config.hiveUser;
-	openSessReq.password = config.hivePassword;
-	openSessReq.client_protocol = ttypes.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V7;
-	//openSessReq.configuration = options;
-	console.log(openSessReq);
-	client.OpenSession(openSessReq, function (err, result){
-		if (err) {
-			console.log("OpenSession erreur : " + err);
+	client.disconnect(session, function(err, res){
+		if(err) {
+			logger.error('Disconnection error : ' + err);
+			endProgram(1);
 		} else {
-			console.log("OpenSession status : " + result.status.statusCode);
-			callback(result.sessionHandle);
-		}
+			logger.info('Disconnection success');
+			endProgram(0);
+		}	
 	});
+	
 }
 
-/*Close Hive session*/
-function closeSession(session) {
-	client.CloseSession(session, function(err, result) {
-		if (err) {
-			console.log("closeSession :  erreur = " + error);
-		} else {
-			console.log('Session closed');
-			connection.end();
-			console.log('Connection closed');
-		}
-	});
-}
+logger.info('Connecting ...');
 
-/*Execute HiveQL Statement*/
-function executeStatement (session, statement, callback) {
-	request = new ttypes.TExecuteStatementReq();
-	request.sessionHandle = session;
-	request.statement = statement;
-	request.runAsync = false;
-	client.ExecuteStatement(request, function (err, result){
-		if (err) {
-			console.log("ExecuteStatement erreur : " + err);
-		} else {
-			console.log("ExecuteStatement status : " + result.status.statusCode);
-			callback(result.operationHandle);
-		}
-	});
-}
-
-function fetchRows (operation, maxRows, callback) {
-	request = new ttypes.TFetchResultsReq();
-	request.operationHandle = operation;
-	request.orientation = ttypes.TFetchOrientation.FETCH_NEXT;
-	request.maxRows = maxRows;
-	client.FetchResults(request, function (err, result){
-		if (err) {
-			console.log("FetchResults erreur : " + err);
-		} else {
-			console.log("FetchResults status : " + result.status.statusCode);
-			callback(result);
-		}
-	});
-}
-
-/***********/
-/*Main code*/
-/***********/
-
-var connection = thrift.createConnection(config.hiveHost, config.hivePort);
-var client = thrift.createClient(hive, connection, {auth : config.auth, timeout : config.timeout});
-
-connection.on('error', function(err) {
-	console.log('Connection error : ' + err);
-	/*Close the program with error code*/
-	process.exit(1)
-});
-
-connection.on('connect', function(){
-	console.log("OpenSession call");
-	openSession(config, function (session) {
-		console.log('Inside callback ... ');
-		executeStatement(session, "use test", function (operation) {});
-		executeStatement(session, "select * from emp", function (operation) {
-			fetchRows(operation, 50, function (fetchResult) {
-				console.log(JSON.stringify(fetchResult));
-				endProgram(session);
-			});
+client.connect(function (err, session) {
+	
+	if(err) {
+		logger.error('Connection error : ' + err);
+		endProgram(1);	
+	} else {
+		logger.info('Connection success');
+		logger.info(JSON.stringify(session));
+		
+		client.executeStatement(session, "select * from test.emp", function (err, response) {
+			
+			if(err) {
+				logger.error('ExecuteStatement error = ' + err);
+				disconnect(session);
+			} else {
+				client.fetchRows(response.operationHandle, 50, function(err, response) {
+					logger.info(JSON.stringify(response));
+					disconnect(session);
+				})
+			}
+			
 		});
-	});
+	}
+	
 });
-
-function endProgram(session) {
-	client.CloseSession(session);
-	console.log("Program done");
-	process.exit(0);
-}

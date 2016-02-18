@@ -1,22 +1,35 @@
 {
   "name": "hive-thrift",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SistemaStrategy/HiveThrift.git"
+  },
+  "private": false,
   "description": "Node application using thrift API to query Hive",
-  "main": "index.js",
+  //"main": "index.js",
   "scripts": {
-	"start": "node index.js",
+	"run" : "node index.js"
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "directories": {
+    "lib": "lib"
+  },
   "keywords": [
-    "nodejs",
-    "hive",
-    "thrift"
+    "Hive",
+    "Thrift",
+    "HiveServer2"
   ],
   "author": "yann blanc",
   "license": "UNLICENSED",
   "dependencies": {
-    "thrift": "^0.9.3",
-	"express": "^4.13.4",
+    "bunyan": "^1.6.0",
+    "express": "^4.13.4",
     "mustache-express": "^1.2.2",
+    "thrift": "^0.9.3",
+    "winston": "^2.1.1"
+  },
+  "engines": {
+    "node": ">= 4.3.0"
   }
 }
