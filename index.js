@@ -7,7 +7,7 @@ var bunyan = require('bunyan');
 	
 var logger = bunyan.createLogger({
 		name: 'HiveThriftWeb',
-		stream: process.stderr,
+		stream: process.stdout,
         level: "info"
 	});
 
