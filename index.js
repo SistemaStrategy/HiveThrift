@@ -48,9 +48,17 @@ client.connect(function (err, session) {
 		logger.info(JSON.stringify(session));
 		time1 = date.getTime();
 	
-		client.executeSelect(session, "select * from test.emp where emp.id > 1000", 50, function (err, res) {
+		/*client.executeSelect(session, "select * from test.emp where emp.id > 1000", 50, function (err, res) {
 			logger.info("select * from test.emp where emp.id > 1000 => " + JSON.stringify(res));
 			disconnect(session);
+		});*/
+		
+		client.getSchemasNames(session, function (err, res){
+			logger.info("Schemas => " + res );
+			client.getTablesNames(session, res[1], function (err, res){
+				logger.info("Tables => " + res );
+				disconnect(session);
+			});
 		});
 	}
 	
