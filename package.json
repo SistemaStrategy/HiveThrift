@@ -19,14 +19,13 @@
     "Thrift",
     "HiveServer2"
   ],
-  "author": "yann blanc",
+  "author": "Yann Blanc",
   "license": "UNLICENSED",
   "dependencies": {
     "bunyan": "^1.6.0",
     "express": "^4.13.4",
     "mustache-express": "^1.2.2",
-    "thrift": "^0.9.3",
-    "winston": "^2.1.1"
+    "thrift": "^0.9.3"
   },
   "engines": {
     "node": ">= 4.3.0"

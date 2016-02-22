@@ -9,7 +9,7 @@ var logger = bunyan.createLogger({
 		name: 'HiveThriftWeb',
 		stream: process.stdout,
         level: "info"
-	});
+});
 
 /*********************************************************************************/
 /*                                    MAIN                                       */
@@ -35,9 +35,6 @@ function disconnect(session) {
 
 logger.info('Connecting ...');
 
-var date = new Date();
-var time1, time2;
-
 client.connect(function (err, session) {
 	
 	if(err) {
@@ -46,18 +43,22 @@ client.connect(function (err, session) {
 	} else {
 		logger.info('Connection success');
 		logger.info(JSON.stringify(session));
-		time1 = date.getTime();
-	
-		/*client.executeSelect(session, "select * from test.emp where emp.id > 1000", 50, function (err, res) {
-			logger.info("select * from test.emp where emp.id > 1000 => " + JSON.stringify(res));
-			disconnect(session);
-		});*/
-		
-		client.getSchemasNames(session, function (err, res){
-			logger.info("Schemas => " + res );
-			client.getTablesNames(session, res[1], function (err, res){
-				logger.info("Tables => " + res );
-				disconnect(session);
+
+		client.getSchemasNames(session, function (err, resSchema){
+
+			logger.info("Schemas => " + JSON.stringify(resSchema));
+			var testSchema = resSchema.TABLE_SCHEM[1];
+			client.getTablesNames(session, testSchema, function (err, resTable){
+
+				client.changeLogLevelSilent();
+				logger.info("Tables => " + JSON.stringify(resTable));
+				var empTable = resTable.TABLE_NAME[1];
+				client.getColumns(session, testSchema, empTable, function (err, resCol){
+
+					logger.info("Columns for " + testSchema + "." + empTable + " => " + JSON.stringify(resCol));
+					disconnect(session);
+
+				});			
 			});
 		});
 	}
