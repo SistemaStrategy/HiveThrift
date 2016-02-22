@@ -15,6 +15,10 @@ To install HiveThrift using npm, use the following command :
 ```
 npm install hive-thrift
 ```
+If you're using a Vagrant box, use the --no-bin-links argument
+```
+npm install hive-thrift --no-bin-links
+```
 
 ## Getting Started
 ### From sources
@@ -39,7 +43,7 @@ var client = require('hive-thrift');
 ```
 
 ### Example code
-Some API uses are shown in the **examples** folder.
+Some API uses are shown in the **examples** folder. Don't forget to change the **require** part if you're using npm install ... 
 
 ## Hive configuration
 The Hive configuration is stored in a config.json file present in the root directory of the project. The host must be pointing to the **HiveServer2** instance.
