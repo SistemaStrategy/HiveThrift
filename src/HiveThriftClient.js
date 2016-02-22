@@ -2,8 +2,8 @@
 	'use strict';
 		
 	var thrift = require('thrift'),
-		hive = require('./gen-nodejs/TCLIService'),
-		ttypes = require('./gen-nodejs/TCLIService_types'),
+		hive = require('../lib/gen-nodejs/TCLIService'),
+		ttypes = require('../lib/gen-nodejs/TCLIService_types'),
 		bunyan = require('bunyan');
 
 	/*********************************************************************************/

@@ -1,3 +1,3 @@
 # HiveThriftLibs
 
-This folder contains the HiveThriftAPI libraries and source code.
+This folder contains the HiveThriftAPI libraries (thrift files).
