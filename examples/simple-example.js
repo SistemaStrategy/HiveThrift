@@ -1,7 +1,6 @@
 /*********************************************************************************/
 /*       If module is installed with npm use the following include :             */
 /*       var client = require ('hive-thrift')                                    */
-
 /*********************************************************************************/
 var client = require('../index.js');
 

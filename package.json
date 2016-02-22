@@ -1,12 +1,12 @@
 {
   "name": "hive-thrift",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/SistemaStrategy/HiveThrift.git"
   },
   "private": false,
-  "description": "Node application using thrift API to query Hive",
+  "description": "Node API using thrift to query Hive",
   "main" : "index.js",
   "scripts": {
     "test": "node ./test/ping-database.js | ./node_modules/bunyan/bin/bunyan"
