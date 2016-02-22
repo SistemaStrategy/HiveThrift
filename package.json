@@ -1,15 +1,15 @@
 {
   "name": "hive-thrift",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/SistemaStrategy/HiveThrift.git"
   },
   "private": false,
   "description": "Node application using thrift API to query Hive",
+  "main" : "index.js",
   "scripts": {
-	"run" : "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./test/ping-database.js | ./node_modules/bunyan/bin/bunyan"
   },
   "directories": {
     "lib": "lib"
@@ -23,8 +23,6 @@
   "license": "UNLICENSED",
   "dependencies": {
     "bunyan": "^1.6.0",
-    "express": "^4.13.4",
-    "mustache-express": "^1.2.2",
     "thrift": "^0.9.3"
   },
   "engines": {
