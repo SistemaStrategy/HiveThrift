@@ -37,7 +37,7 @@ To learn more about Bunyan click [here](https://github.com/trentm/node-bunyan).
 
 ### From npm
 * Create a config.json file in the root directory of your project like the config.json present [here](https://github.com/SistemaStrategy/HiveThrift/blob/master/config.json)
-* Write your node program like [here](https://github.com/SistemaStrategy/HiveThrift/blob/master/example/simple-example.js) and don't forget to use the library by using the following import
+* Write your node program like [here](https://github.com/SistemaStrategy/HiveThrift/blob/master/examples/simple-example.js) and don't forget to use the library by using the following import
 ```
 var client = require('hive-thrift');
 ```
