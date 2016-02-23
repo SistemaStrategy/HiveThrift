@@ -11,7 +11,7 @@ var bunyan = require('bunyan');
 /*********************************************************************************/
 	
 var logger = bunyan.createLogger({
-		name: 'HiveThriftWeb',
+		name: 'HiveThrifSimpleExample',
 		stream: process.stdout,
         level: "info"
 });

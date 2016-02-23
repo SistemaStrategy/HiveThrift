@@ -1,5 +1,5 @@
 # HiveThrift
-HiveThrift is a javascript API for fast querying of Hive using Thrift middleware. 
+HiveThrift is a node API for fast querying of Hive using Thrift middleware. 
 
 ##Prerequisite
 * NodeJS >= 4.3.0

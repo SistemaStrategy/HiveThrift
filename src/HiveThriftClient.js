@@ -4,7 +4,8 @@
 	var thrift = require('thrift'),
 		hive = require('../lib/gen-nodejs/TCLIService'),
 		ttypes = require('../lib/gen-nodejs/TCLIService_types'),
-		bunyan = require('bunyan');
+		bunyan = require('bunyan'),
+		fs = require('fs');
 
 	/*********************************************************************************/
 	/*                                CONFIGURATION                                  */
@@ -22,6 +23,13 @@
 	/*                         LOCAL VARIABLES - FUNCTIONS                           */
 	/*********************************************************************************/
 	
+	/*Check if the log folder is existing, otherwise he's created*/
+	var dirLogs = './logs';
+
+	if (!fs.existsSync(dirLogs)){
+	    fs.mkdirSync(dirLogs);
+	}
+
 	/*Create library logger*/
 	var logger = bunyan.createLogger({
 		name: 'HiveThriftLibrary',
@@ -29,7 +37,7 @@
 			{
 				level: 'info',
 				type: 'rotating-file',
-				path: './logs/HiveThriftLibrary.trace',
+				path: dirLogs + '/HiveThriftLibrary.trace',
 				period: '1d',   // daily rotation
 				count: 10        // keep 10 back copies
 			}
