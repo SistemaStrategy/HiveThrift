@@ -3,7 +3,7 @@
 /*       var client = require ('hive-thrift')                                    */
 /*********************************************************************************/
 var client = require('../index.js');
-
+var util = require('../src/util.js');
 var bunyan = require('bunyan');
 
 /*********************************************************************************/
@@ -19,30 +19,20 @@ var logger = bunyan.createLogger({
 /*********************************************************************************/
 /*                                    FUNCTIONS                                  */
 /*********************************************************************************/
-
-/*End program function*/
-function endProgram(returnVal) {
-	logger.info('End of the program, returning ' + returnVal);
-	process.exit(returnVal);
-}
-
-/*Disconnect function*/
-function disconnect(session) {
-	client.disconnect(session, function(err, res){
-		if(err) {
-			logger.error('Disconnection error : ' + err);
-			endProgram(1);
-		} else {
-			logger.info('Disconnection success');
-			endProgram(0);
-		}	
-	});
-}
-
 /*Handle error function*/
 function handleError(funcName, error, session) {
-	logger.error(funcName + " error : " + error);
-	disconnect(session);
+	logger.error(funcName + " error : " + JSON.stringify(error));
+	util.disconnect(session);
+}
+
+/*Get a specific element*/
+function getByValue(attrName, attrValue, object) {
+	for(var i = 0 ; i < object[attrName].length; i++) {
+		if(object[attrName][i] == attrValue) {
+			return attrValue;
+		}
+	}
+	return null;
 }
 
 /*********************************************************************************/
@@ -51,6 +41,8 @@ function handleError(funcName, error, session) {
 
 /*This simple test program is querying a table named 'emp' created in the 'test' schema. 
 Create these element in order to have results.*/
+var schemaName = 'test';
+var tableName = 'emp';
 
 logger.info('Connecting ...');
 
@@ -59,8 +51,8 @@ client.changeLogLevelTrace();
 
 client.connect(function (err, session) {
 	if (err) {
-		logger.error('Connection error : ' + err);
-		endProgram(1);	
+		logger.error('Connection error : ' + JSON.stringify(err));
+		util.endProgram(1);	
 	} else {
 		logger.info('Connection success');
 		logger.info(JSON.stringify(session));
@@ -71,27 +63,30 @@ client.connect(function (err, session) {
 				handleError('getSchemasNames',err,session);
 			} else {
 				logger.info("Schemas => " + JSON.stringify(resSchema));
-				/*Retrieve a schema name (TABLE_SCHEM[0] = default)*/
-				var testSchema = resSchema.TABLE_SCHEM[1];
+				if(!getByValue('TABLE_SCHEM',schemaName,resSchema)) {
+					logger.error('Schema ' + schemaName + ' not existing ... ');
+					util.disconnect(session);
+				}
 
-				/*Retrieve tables for the schema selected*/
-				client.getTablesNames(session, testSchema, function (err, resTable) {
+				/*Retrieve tables for schemaName*/
+				client.getTablesNames(session, schemaName, function (err, resTable) {
 					if(err) {
 						handleError('getTablesNames',err,session);
 					} else {
 						logger.info("Tables => " + JSON.stringify(resTable));
-						/*Retrieve a table name*/
-						var empTable = resTable.TABLE_NAME[1];
-
-						/*Execute select * on the selected table*/
-						var selectStatement = 'select * from ' + empTable;
+						if(!getByValue('TABLE_NAME',tableName,resTable)) {
+							logger.error('Table ' + tableName + ' not existing ... ');
+							util.disconnect(session);
+						}
+						/*Execute select * on tableName*/
+						var selectStatement = 'select * from ' + schemaName + '.' + tableName;
 						client.executeSelect(session, selectStatement, function (error, result) {
 							if(err) {
 								handleError('executeSelect',err,session);
 							} else {
 								logger.info(selectStatement + " => " + JSON.stringify(result));
 								/*Close the session and the connection*/
-								disconnect(session);
+								util.disconnect(session);
 							}
 						});	
 					}	

@@ -11,14 +11,10 @@ var bunyan = require('bunyan');
 /*********************************************************************************/
 	
 var logger = bunyan.createLogger({
-		name: 'HiveThriftPingDatabase',
+		name: 'HiveThriftDropSchema',
 		stream: process.stdout,
         level: "info"
 });
-
-/*********************************************************************************/
-/*                                    FUNCTIONS                                  */
-/*********************************************************************************/
 
 /*********************************************************************************/
 /*                                    MAIN                                       */
@@ -37,14 +33,22 @@ client.connect(function (err, session) {
 	} else {
 		logger.info('Connection success');
 		logger.info(JSON.stringify(session));
-
-		client.getSchemasNames(session, function (err, resSchema) {
+		var dbName = 'createTest';
+		client.rawExecuteStatement(session, 'create database ' + dbName , function (err, resCreate) {
 			if(err) {
-				logger.error("Error : " + err)
+				logger.error("Error : " + JSON.stringify(err));
+				util.disconnect(session);
 			} else {
-				logger.info("Schemas => " + JSON.stringify(resSchema));
+				logger.info("Schema created ");
+				client.getSchemasNames(session, function (err, resSchema) {
+					if(err) {
+						logger.error("Error : " + JSON.stringify(err))
+					} else {
+						logger.info("Schemas => " + JSON.stringify(resSchema));
+					}
+					util.disconnect(session);
+				});
 			}
-			util.disconnect(session);
 		});
 	}
 });
